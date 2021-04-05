@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
 import com.fasterxml.jackson.databind.SerializationFeature
 import io.ktor.application.*
 import io.ktor.features.*
+import io.ktor.gson.*
 import io.ktor.http.*
 import io.ktor.jackson.*
 import io.ktor.request.*
@@ -14,7 +15,7 @@ import io.ktor.routing.*
 val lastId: Int = 1
 val notes = mutableMapOf<Int, String>()
 
-data class Note(val text: String)
+data class Note(val id: Int, val text: String)
 
 data class HttpBinError(
     val request: String,
@@ -30,7 +31,7 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 fun Application.module(testing: Boolean = false) {
 
     install(ContentNegotiation) {
-        register(ContentType.Application.Xml, CustomXmlConverter())
+        register(ContentType.Application.Xml, GsonConverter())
         jackson {
             configure(SerializationFeature.INDENT_OUTPUT, true)
             setDefaultPrettyPrinter(DefaultPrettyPrinter().apply {
@@ -38,7 +39,7 @@ fun Application.module(testing: Boolean = false) {
                 indentObjectsWith(DefaultIndenter("  ", "\n"))
             })
         }
-=    }
+    }
 
     install(StatusPages) {
         exception<NumberFormatException> {
@@ -53,33 +54,32 @@ fun Application.module(testing: Boolean = false) {
 
     routing {
 
-        route("/notes") {
-            get {
-                call.respond(notes)
-            }
-            post {
-                val requestBody = call.receive<Note>()
-                requestBody.text
-            }
-        }
+//        route("/notes") {
+//            get {
+//                call.respond(notes)
+//            }
+//            post {
+//                val requestBody = call.receive<Note>()
+//                requestBody.text
+//            }
+//
+//            route("/{id}") {
+//
+//                get {
+//                    val id = call.parameters["id"]?.toInt()
+//
+//                }
+//                put {
+//                    val id = call.parameters["id"]?.toInt()
+//
+//                }
+//                delete {
+//                    call.respond(status = HttpStatusCode.OK, "")
+//                }
+//
+//            }
+//        }
 
-        route("/notes/{id}") {
-
-            get {
-                val id = call.parameters["id"]?.toInt()
-
-            }
-
-            put {
-                val id = call.parameters["id"]?.toInt()
-
-            }
-
-            delete {
-                call.respond(status = HttpStatusCode.OK, "")
-            }
-
-        }
 
         route("{...}") {
             handle {

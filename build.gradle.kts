@@ -27,5 +27,6 @@ dependencies {
     implementation("io.ktor:ktor-jackson:$ktor_version")
     implementation("io.ktor:ktor-server-netty:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
+//    implementation("net.devrieze:xmlutil-serialization:0.80.1")
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
 }

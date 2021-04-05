@@ -1,16 +1,9 @@
 package com.example
 
-import io.ktor.application.*
-import io.ktor.http.*
-import io.ktor.request.*
-import io.ktor.util.pipeline.*
 
-interface CustomXmlConverter {
-    suspend fun convertForSend(
-        context: PipelineContext<Any, ApplicationCall>,
-        contentType: ContentType,
-        value: Any
-    ): Any?
+import io.ktor.features.*
+import java.beans.XMLDecoder
 
-    suspend fun convertForReceive(context: PipelineContext<ApplicationReceiveRequest, ApplicationCall>): Any?
+public abstract class CustomXmlConverter(private val xml: XMLDecoder) : ContentConverter {
+
 }

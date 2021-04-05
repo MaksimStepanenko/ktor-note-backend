@@ -24,6 +24,14 @@ fun Application.configureErrors() {
             )
             call.respond(error)
         }
+        exception<NotFoundException> {
+            val error = HttpBinError(
+                code = HttpStatusCode.BadRequest,
+                request = call.request.local.uri,
+                message = "Note with such id not found"
+            )
+            call.respond(error)
+        }
     }
 
     routing {
