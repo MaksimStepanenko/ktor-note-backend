@@ -1,27 +1,22 @@
 package com.example
 
-import io.ktor.routing.*
 import io.ktor.http.*
-import io.ktor.locations.*
-import io.ktor.serialization.*
-import io.ktor.features.*
-import io.ktor.gson.*
-import io.ktor.jackson.*
-import com.fasterxml.jackson.databind.*
-import io.ktor.application.*
-import io.ktor.response.*
-import io.ktor.request.*
-import com.example.plugins.*
-import kotlin.test.*
 import io.ktor.server.testing.*
+import kotlin.test.Test
 
 class ApplicationTest {
     @Test
     fun testRoot() {
-        withTestApplication({ configureRouting() }) {
-            handleRequest(HttpMethod.Get, "/").apply {
-                assertEquals(HttpStatusCode.OK, response.status())
-                assertEquals("Hello World!", response.content)
+        withTestApplication {
+            handleRequest(HttpMethod.Post, "/notes").apply {
+                print(response.content)
+//                assertEquals(HttpStatusCode.OK, response.status())
+//                assertEquals("[]", response.content)
+            }
+            handleRequest(HttpMethod.Get, "/notes").apply {
+                print(response.content)
+//                assertEquals(HttpStatusCode.OK, response.status())
+//                assertEquals("[]", response.content)
             }
         }
     }
