@@ -17,6 +17,9 @@ application {
 repositories {
     mavenCentral()
     jcenter()
+    maven {
+        url = uri("https://dl.bintray.com/pdvrieze/maven")
+    }
 }
 
 dependencies {
@@ -27,6 +30,7 @@ dependencies {
     implementation("io.ktor:ktor-jackson:$ktor_version")
     implementation("io.ktor:ktor-server-netty:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
-//    implementation("net.devrieze:xmlutil-serialization:0.80.1")
+    implementation("net.devrieze:xmlutil-serialization:0.80.1")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.11.1")
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
 }
