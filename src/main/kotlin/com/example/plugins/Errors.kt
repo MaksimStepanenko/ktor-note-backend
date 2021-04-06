@@ -1,5 +1,6 @@
 package com.example.plugins
 
+import com.example.models.HttpBinError
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
@@ -7,30 +8,23 @@ import io.ktor.response.*
 import io.ktor.routing.*
 
 
-data class HttpBinError(
-    val request: String,
-    val message: String,
-    val code: HttpStatusCode,
-    val cause: Throwable? = null
-)
-
 fun Application.configureErrors() {
     install(StatusPages) {
         exception<NumberFormatException> {
             val error = HttpBinError(
-                code = HttpStatusCode.BadRequest,
+                code = HttpStatusCode.BadRequest.toString(),
                 request = call.request.local.uri,
                 message = "id param must be integer"
             )
-            call.respond(error)
+            call.respond(HttpStatusCode.BadRequest, error)
         }
         exception<NotFoundException> {
             val error = HttpBinError(
-                code = HttpStatusCode.BadRequest,
+                code = HttpStatusCode.NotFound.toString(),
                 request = call.request.local.uri,
                 message = "Note with such id not found"
             )
-            call.respond(error)
+            call.respond(HttpStatusCode.NotFound, error)
         }
     }
 
@@ -38,11 +32,11 @@ fun Application.configureErrors() {
         route("{...}") {
             handle {
                 val error = HttpBinError(
-                    code = HttpStatusCode.NotFound,
+                    code = HttpStatusCode.NotFound.toString(),
                     request = call.request.local.uri,
-                    message = "NOT FOUND"
+                    message = "ROUTE NOT FOUND"
                 )
-                call.respond(error)
+                call.respond(HttpStatusCode.NotFound, error)
             }
         }
     }

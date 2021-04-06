@@ -6,13 +6,13 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class NegativeJsonTest {
-    private val postBody = "{\"value\": \"new note!\"}"
 
 
     @Test
     fun testIdIsNotANumber() {
 
         withTestApplication({ module(testing = true) }) {
+            val postBody = "{\"value\": \"new note!\"}"
 
             val postRequest = handleRequest(HttpMethod.Post, "/notes") {
                 addHeader(
@@ -31,27 +31,60 @@ class NegativeJsonTest {
 
             handleRequest(HttpMethod.Get, "/notes/test").apply {
                 assertEquals(HttpStatusCode.BadRequest, response.status())
-                assertEquals("id param must be integer", response.content)
+                assertEquals(
+                    "{\"request\":\"/notes/test\",\"message\":\"id param must be integer\",\"code\":\"400 Bad Request\"}",
+                    response.content
+                )
             }
         }
     }
+
     @Test
-    fun testIdIsNotANumber() {
+    fun testPutNonexistent() {
 
         withTestApplication({ module(testing = true) }) {
-            handleRequest(HttpMethod.Delete, "/notes/1").apply {
-                assertEquals(HttpStatusCode.BadRequest, response.status())
-                assertEquals("id param must be integer", response.content)
+            val putBody = "{\"value\": \"new new note!\"}"
+            val putRequest = handleRequest(HttpMethod.Put, "/notes/100") {
+                addHeader(
+                    HttpHeaders.ContentType,
+                    ContentType.Application.Json.toString()
+                )
+                addHeader(
+                    HttpHeaders.Accept,
+                    ContentType.Application.Json.toString()
+                )
+                setBody(putBody)
             }
+            assertEquals(HttpStatusCode.NotFound, putRequest.response.status())
+            assertEquals(
+                "{\"request\":\"/notes/100\",\"message\":\"Note with such id not found\",\"code\":\"404 Not Found\"}",
+                putRequest.response.content
+            )
         }
     }
 
     @Test
-    fun testNoteNotFound() {
+    fun testDeleteNonexistent() {
         withTestApplication({ module(testing = true) }) {
             handleRequest(HttpMethod.Delete, "/notes/100").apply {
                 assertEquals(HttpStatusCode.NotFound, response.status())
-                assertEquals("Note with such id not found", response.content)
+                assertEquals(
+                    "{\"request\":\"/notes/100\",\"message\":\"Note with such id not found\",\"code\":\"404 Not Found\"}",
+                    response.content
+                )
+            }
+        }
+    }
+
+    @Test
+    fun testPathNotFound() {
+        withTestApplication({ module(testing = true) }) {
+            handleRequest(HttpMethod.Get, "/nonexisten").apply {
+                assertEquals(HttpStatusCode.NotFound, response.status())
+                assertEquals(
+                    "{\"request\":\"/nonexisten\",\"message\":\"ROUTE NOT FOUND\",\"code\":\"404 Not Found\"}",
+                    response.content
+                )
             }
         }
     }

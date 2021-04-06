@@ -1,10 +1,10 @@
 package com.example.models
 
-import io.ktor.http.*
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class HttpBinError(
     val request: String,
     val message: String,
-    val code: HttpStatusCode,
-    val cause: Throwable? = null
+    val code: String,
 )
