@@ -9,12 +9,10 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.serialization.Serializable
 
+@Serializable
+data class Note(val id: Int = 0, var value: String)
 
-@KtorExperimentalLocationsAPI
 fun Application.configureRouting() {
-
-    @Serializable
-    data class Note(val id: Int = 0, var value: String)
 
     val notes = mutableListOf<Note>()
     var counter = 0

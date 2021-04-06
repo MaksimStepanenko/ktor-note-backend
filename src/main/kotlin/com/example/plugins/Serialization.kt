@@ -1,6 +1,5 @@
 package com.example.plugins
 
-import com.example.CustomXmlConverter
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
