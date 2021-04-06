@@ -12,10 +12,7 @@ class PositiveXmlTest {
     fun testGetList() {
         withTestApplication({ module(testing = true) }) {
             val getRequest = handleRequest(HttpMethod.Get, "/notes") {
-                addHeader(
-                    HttpHeaders.Accept,
-                    ContentType.Text.Xml.toString()
-                )
+                addHeader(HttpHeaders.Accept, ContentType.Text.Xml.toString())
             }
             assertEquals(HttpStatusCode.OK, getRequest.response.status())
             assertEquals("<ArrayList/>", getRequest.response.content)
