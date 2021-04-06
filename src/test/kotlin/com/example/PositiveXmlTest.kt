@@ -93,7 +93,7 @@ class PositiveXmlTest {
             assertEquals(HttpStatusCode.OK, postRequest.response.status())
             assertEquals("<item><id>1</id><value>new note!</value></item>", postRequest.response.content)
 
-            val putBody = "<item><id>1</id><value>new note!</value></item>"
+            val putBody = "<item><id>1</id><value>new new note!</value></item>"
             val putRequest = handleRequest(HttpMethod.Put, "/notes/1") {
                 addHeader(
                     HttpHeaders.ContentType,

@@ -2,7 +2,9 @@ package com.example.plugins
 
 
 import com.example.models.Note
+import com.example.models.Notes
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import io.ktor.application.*
 import io.ktor.content.*
@@ -27,7 +29,11 @@ class CustomXmlConverter(private val xml: XML = XML {policy = JacksonPolicy}) : 
         value: Any
     ): Any {
         return TextContent(
-            XmlMapper().writeValueAsString(value),
+            XmlMapper(
+                JacksonXmlModule()
+                .apply {
+                    setXMLTextElementName("text")
+                }).writeValueAsString(value),
 //            xml.encodeToString(value),
             contentType.withCharset(context.call.suitableCharset())
         )
@@ -47,7 +53,10 @@ class CustomXmlConverter(private val xml: XML = XML {policy = JacksonPolicy}) : 
         return withContext(Dispatchers.IO) {
             val reader = channel.toInputStream().reader(context.call.request.contentCharset() ?: Charsets.UTF_8)
 //            xml.decodeFromString<Note>(reader.toString())
-            XmlMapper().readValue(reader, Note::class.java)
+            XmlMapper(JacksonXmlModule()
+                .apply {
+                    setXMLTextElementName("text")
+                }).readValue(reader, Note::class.java)
 //            gson.fromJson(reader, javaType.javaObjectType) ?: throw UnsupportedNullValuesException()
         }
     }
