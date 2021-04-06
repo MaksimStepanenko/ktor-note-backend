@@ -1,5 +1,6 @@
 package com.example.plugins
 
+import com.example.models.Note
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
@@ -7,10 +8,7 @@ import io.ktor.locations.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import kotlinx.serialization.Serializable
 
-@Serializable
-data class Note(val id: Int = 0, var value: String)
 
 fun Application.configureRouting() {
 

@@ -1,6 +1,8 @@
 package com.example.plugins
 
 
+import com.example.models.Note
+import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import io.ktor.application.*
 import io.ktor.content.*
@@ -45,7 +47,7 @@ class CustomXmlConverter(private val xml: XML = XML {policy = JacksonPolicy}) : 
         return withContext(Dispatchers.IO) {
             val reader = channel.toInputStream().reader(context.call.request.contentCharset() ?: Charsets.UTF_8)
 //            xml.decodeFromString<Note>(reader.toString())
-            XmlMapper().readValue(reader, javaType.javaObjectType)
+            XmlMapper().readValue(reader, Note::class.java)
 //            gson.fromJson(reader, javaType.javaObjectType) ?: throw UnsupportedNullValuesException()
         }
     }
